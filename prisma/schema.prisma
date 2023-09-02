@@ -11,20 +11,20 @@ datasource db {
 }
 
 model User {
-  id Int        @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+  email String @unique
   name String?
-  email String  @unique
   Post Post[]
 
   @@map("users")
 }
 
 model Post {
-  id Int          @id @default(autoincrement())
+  id Int @id @default(autoincrement())
   title String?
-  content String  @db.VarChar(255)
+  content String @db.VarChar(255)
   userId Int
-  author User     @relation(fields: [userId], references: [id])
+  author User @relation(fields: [userId], references: [id])
 
   @@map("posts")
 }
