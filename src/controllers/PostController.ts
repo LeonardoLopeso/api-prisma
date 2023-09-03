@@ -1,23 +1,46 @@
 import { Request, Response } from 'express';
 import { prisma } from '../database';
+import { CreatePostService } from '../service/CreatePostService';
+import { PostRepository } from '../repositories/PostRepositories';
 
 export default {
   async createPost(request: Request, response: Response) {
     try {
       const { title, content, userId } = request.body;
 
-      const post = await prisma.post.create({
-        data: {
-          title,
-          content,
-          userId
-        }
-      })
+      const createPost = new CreatePostService(new PostRepository());
+
+      const post = await createPost.execute(
+        title,
+        content,
+        userId
+      );
 
       return response.json({
         error: false,
         message: "Sucesso: Post cadastrado com sucesso!",
         post
+      })
+
+    } catch (error) {
+      return response.json({ message: error.message })
+    }
+  },
+
+  async listAllPosts(request: Request, response: Response) {
+    try {
+      const post = await prisma.post.findMany();
+
+      if(!post) {
+        return response.json({
+          error: true,
+          message: "Error: Posts não encontrado!",
+        })
+      }
+
+      return response.json({
+        error: false,
+        posts: post
       })
 
     } catch (error) {

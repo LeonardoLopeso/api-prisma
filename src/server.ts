@@ -7,12 +7,13 @@ app.use(Express.json());
 const PORT = 8000;
 
 app.get('/', (request, response) => {
-  return response.send({ message: "Hello World" })
+  return response.send({ message: "API - Prisma" })
 })
 
 app.post('/user', UserController.createUser);
 
 app.post('/post', PostController.createPost);
+app.get('/listAllPosts', PostController.listAllPosts);
 app.get('/listPost/:id', PostController.listPost);
 app.put('/updatePost', PostController.updatePost);
 app.delete('/deletePost/:id', PostController.deletePost);
